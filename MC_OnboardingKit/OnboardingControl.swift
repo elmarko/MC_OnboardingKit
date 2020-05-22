@@ -34,19 +34,11 @@ extension OnboardingControl:OnboardingControlDelegate{
 
 public class OnboardingControl{
     
-    var onboardingType: OnboardingType!
+    var onboardingDefaultsKey: String?
     
     public enum OnboardingDisplayType{
         case standard
         case simple
-    }
-    
-    public enum OnboardingType{
-        case initial
-        case pinaAssistanceTab
-        case communityAssistanceTab
-        case communityTab
-        case settingsTab
     }
     
     public weak var delegate: OnboardingControlPresentingVCDelegate?
@@ -62,46 +54,6 @@ public class OnboardingControl{
     let onboardingItem3Title = NSLocalizedString("OnboardingInitialItem3Title", comment: "title")
     let onboardingItem3Description = NSLocalizedString("OnboardingInitialItem3Description", comment: "description")
     
-    let pinaAssistanceTabOnboardingTitle = NSLocalizedString("pinaAssistanceTabOnboardingTitle", comment: "title")
-    let pinaAssistanceTabOnboardingDescription = NSLocalizedString("pinaAssistanceTabOnboardingDescription", comment: "description")
-    let pinaAssistanceTabOnboardingItem1Title = NSLocalizedString("pinaAssistanceTabOnboardingItem1Title", comment: "title")
-    let pinaAssistanceTabOnboardingItem1Description = NSLocalizedString("pinaAssistanceTabOnboardingItem1Description", comment: "description")
-    let pinaAssistanceTabOnboardingItem2Title = NSLocalizedString("pinaAssistanceTabOnboardingItem2Title", comment: "title")
-    let pinaAssistanceTabOnboardingItem2Description = NSLocalizedString("pinaAssistanceTabOnboardingItem2Description", comment: "description")
-    let pinaAssistanceTabOnboardingItem3Title = NSLocalizedString("pinaAssistanceTabOnboardingItem3Title", comment: "title")
-    let pinaAssistanceTabOnboardingItem3Description = NSLocalizedString("pinaAssistanceTabOnboardingItem3Description", comment: "description")
-    
-    let communityAssistanceTabOnboardingTitle = NSLocalizedString("communityAssistanceTabOnboardingTitle", comment: "title")
-    let communityAssistanceTabOnboardingDescription = NSLocalizedString("communityAssistanceTabOnboardingDescription", comment: "description")
-    let communityAssistanceTabOnboardingItem1Title = NSLocalizedString("communityAssistanceTabOnboardingItem1Title", comment: "title")
-    let communityAssistanceTabOnboardingItem1Description = NSLocalizedString("communityAssistanceTabOnboardingItem1Description", comment: "description")
-    let communityAssistanceTabOnboardingItem2Title = NSLocalizedString("communityAssistanceTabOnboardingItem2Title", comment: "title")
-    let communityAssistanceTabOnboardingItem2Description = NSLocalizedString("communityAssistanceTabOnboardingItem2Description", comment: "description")
-    let communityAssistanceTabOnboardingItem3Title = NSLocalizedString("communityAssistanceTabOnboardingItem3Title", comment: "title")
-    let communityAssistanceTabOnboardingItem3Description = NSLocalizedString("communityAssistanceTabOnboardingItem3Description", comment: "description")
-    
-    
-    let communitySimpleTabOnboardingTitle = NSLocalizedString("communityTabSimpleOnboardingTitle", comment: "title")
-    let communitySimpleTabOnboardingDescription = NSLocalizedString("communityTabSimpleOnboardingDescription", comment: "description")
-    let communityTabOnboardingTitle = NSLocalizedString("communityTabOnboardingTitle", comment: "title")
-    let communityTabOnboardingDescription = NSLocalizedString("communityTabOnboardingDescription", comment: "description")
-    let communityTabOnboardingItem1Title = NSLocalizedString("communityTabOnboardingItem1Title", comment: "title")
-    let communityTabOnboardingItem1Description = NSLocalizedString("communityTabOnboardingItem1Description", comment: "description")
-    let communityTabOnboardingItem2Title = NSLocalizedString("communityTabOnboardingItem2Title", comment: "title")
-    let communityTabOnboardingItem2Description = NSLocalizedString("communityTabOnboardingItem2Description", comment: "description")
-    let communityTabOnboardingItem3Title = NSLocalizedString("communityTabOnboardingItem3Title", comment: "title")
-    let communityTabOnboardingItem3Description = NSLocalizedString("communityTabOnboardingItem3Description", comment: "description")
-    
-    let settingsSimpleTabOnboardingTitle = NSLocalizedString("settingsTabSimpleOnboardingTitle", comment: "title")
-    let settingsSimpleTabOnboardingDescription = NSLocalizedString("settingsTabSimpleOnboardingDescription", comment: "description")
-    let settingsTabOnboardingTitle = NSLocalizedString("settingsTabOnboardingTitle", comment: "title")
-    let settingsTabOnboardingDescription = NSLocalizedString("settingsTabOnboardingDescription", comment: "description")
-    let settingsTabOnboardingItem1Title = NSLocalizedString("settingsTabOnboardingItem1Title", comment: "title")
-    let settingsTabOnboardingItem1Description = NSLocalizedString("settingsTabOnboardingItem1Description", comment: "description")
-    let settingsTabOnboardingItem2Title = NSLocalizedString("settingsTabOnboardingItem2Title", comment: "title")
-    let settingsTabOnboardingItem2Description = NSLocalizedString("settingsTabOnboardingItem2Description", comment: "description")
-    let settingsTabOnboardingItem3Title = NSLocalizedString("settingsTabOnboardingItem3Title", comment: "title")
-    let settingsTabOnboardingItem3Description = NSLocalizedString("settingsTabOnboardingItem3Description", comment: "description")
     
     
     //MARK: - Init
@@ -128,14 +80,15 @@ public class OnboardingControl{
         
     */
     @discardableResult
-    public func setup(withPresentingVC vc: UIViewController, for type:OnboardingType, displayType: OnboardingDisplayType = .standard)->Bool{
-        guard !hasSeenOnboarding(for:type) else{return false}
-        self.onboardingType = type
+    public func setup(withPresentingVC vc: UIViewController, for key:String, usingConfig config:OnboardingConfiguration, displayType: OnboardingDisplayType = .standard)->Bool{
+        guard !hasSeenOnboarding(for:key) else{return false}
+        self.onboardingDefaultsKey = key
         guard let presentedVC = setupViewController(for: displayType) else{return false}
         presentedVC.modalPresentationStyle = .overCurrentContext
         presentedVC.delegate = self
+        presentedVC.config = config
         vc.present(presentedVC, animated: false, completion: nil)
-        self.appendConfig(to: presentedVC, for: type, displayType: displayType)
+        //self.appendConfig(to: presentedVC, for: type, displayType: displayType)
         return true
     }
     
@@ -148,47 +101,13 @@ public class OnboardingControl{
         return true
     }
     
-    public func hasSeenOnboarding(for type: OnboardingType)-> Bool{
-        switch type{
-        case .initial:
-            return UserDefaults.standard.bool(forKey: "initialOnboarding")
-        case .pinaAssistanceTab:
-            return UserDefaults.standard.bool(forKey: "pinaAssistanceTabOnboarding")
-        case .communityAssistanceTab:
-            return UserDefaults.standard.bool(forKey: "communityAssistanceTabOnboarding")
-        case .communityTab:
-            return UserDefaults.standard.bool(forKey: "communityTabOnboarding")
-        case .settingsTab:
-            return UserDefaults.standard.bool(forKey: "settingsTabOnboarding")
-        }
+    public func hasSeenOnboarding(for key: String)-> Bool{
+        return UserDefaults.standard.bool(forKey: "initialOnboarding")
     }
     
     //MARK: - private functions
     
-    private func appendConfig(to vc: OnboardViewController, for type:OnboardingType, displayType: OnboardingDisplayType){
-        switch type{
-        case .initial:
-            vc.config = createOnboardingConfig()
-        case .pinaAssistanceTab:
-            vc.config = createPinaAssistanceTabConfig()
-        case .communityAssistanceTab:
-            vc.config = createCommunityAssistanceTabConfig()
-        case .communityTab:
-            switch displayType {
-            case .standard:
-                vc.config = createCommunityTabConfig()
-            case .simple:
-                vc.config = createSimpleCommunityTabConfig()
-            }
-        case .settingsTab:
-            switch displayType {
-            case .standard:
-                vc.config = createSettingsTabConfig()
-            case .simple:
-                vc.config = createSimpleSettingsTabConfig()
-            }
-        }
-    }
+    
     
     private func setupViewController(for type: OnboardingDisplayType)->OnboardViewController?{
         switch type{
@@ -216,25 +135,38 @@ public class OnboardingControl{
     
     private func seenOnboarding(){
         print("seenOnboarding: firing")
-        let key:String
-        switch self.onboardingType{
-        case .initial:
-            key = "initialOnboarding"
-        case .pinaAssistanceTab:
-            key = "pinaAssistanceTabOnboarding"
-        case .communityAssistanceTab:
-            key = "communityAssistanceTabOnboarding"
-        case .communityTab:
-            key = "communityTabOnboarding"
-        case .settingsTab:
-            key = "settingsTabOnboarding"
-        case .none:
-            return
-        }
+        guard let key = self.onboardingDefaultsKey else{return}
         UserDefaults.standard.set(true, forKey: key)
     }
     
     //MARK: Create configs
+    
+    /*
+    private func appendConfig(to vc: OnboardViewController, for type:OnboardingType, displayType: OnboardingDisplayType){
+        switch type{
+        case .initial:
+            vc.config = createOnboardingConfig()
+        case .pinaAssistanceTab:
+            vc.config = createPinaAssistanceTabConfig()
+        case .communityAssistanceTab:
+            vc.config = createCommunityAssistanceTabConfig()
+        case .communityTab:
+            switch displayType {
+            case .standard:
+                vc.config = createCommunityTabConfig()
+            case .simple:
+                vc.config = createSimpleCommunityTabConfig()
+            }
+        case .settingsTab:
+            switch displayType {
+            case .standard:
+                vc.config = createSettingsTabConfig()
+            case .simple:
+                vc.config = createSimpleSettingsTabConfig()
+            }
+        }
+    }
+    
     
     private func createOnboardingConfig()->OnboardingConfiguration{
         let title = onboardingTitle
@@ -360,4 +292,5 @@ public class OnboardingControl{
                                              image: UIImage(named: "onboardingSettingsSingle"))
         return config
     }
+    */
 }
