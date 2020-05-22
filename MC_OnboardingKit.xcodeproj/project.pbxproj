@@ -23,6 +23,7 @@
 		3D0F713024773A700093564F /* OnboardingVC+tableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F712524773A700093564F /* OnboardingVC+tableViewDelegate.swift */; };
 		3D0F713224773AEA0093564F /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F713124773AEA0093564F /* UIFont.swift */; };
 		3D0F7134247744D60093564F /* AccessibilityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F7133247744D60093564F /* AccessibilityHelpers.swift */; };
+		3D0F714C247837830093564F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3D0F714B247837830093564F /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		3D0F712524773A700093564F /* OnboardingVC+tableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OnboardingVC+tableViewDelegate.swift"; sourceTree = "<group>"; };
 		3D0F713124773AEA0093564F /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		3D0F7133247744D60093564F /* AccessibilityHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityHelpers.swift; sourceTree = "<group>"; };
+		3D0F714B247837830093564F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 		3D0F70F724773A050093564F = {
 			isa = PBXGroup;
 			children = (
+				3D0F714B247837830093564F /* README.md */,
 				3D0F710324773A050093564F /* MC_OnboardingKit */,
 				3D0F710E24773A050093564F /* MC_OnboardingKitTests */,
 				3D0F710224773A050093564F /* Products */,
@@ -218,6 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D0F714C247837830093564F /* README.md in Resources */,
 				3D0F712D24773A700093564F /* OnboardingScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
