@@ -17,7 +17,7 @@ There are two types of onboarding:
 
 Create the onboarding config:
 
-    /// Set up the configuration
+    /// Set up a standard configuration
     let title = "Some title to use"
     let desc = "Some description to use"
     let items:[OnboardingConfigItem] = [
@@ -53,14 +53,14 @@ and then present the onboarding VC
 
 Create the onboarding config:
 
-    /// Set up the configuration
+    /// Set up a simple configuration
     let title = "Some title to use"
     let desc = "Some description to use"
     let image = UIImage(named: "someImage")
     let config = OnboardingConfiguration(title: title,
                                          description: desc,
                                          items: [],
-                                         image: nil)
+                                         image: image)
                                          
 and then present the onboarding VC                                
 
@@ -83,3 +83,12 @@ There are two delegate methods that fire on dismissal. One when the button has f
     func didDismissOnboarding()
     /// fires when the VC has finished animating out and dismissing
     func didFinishDismissing()
+    
+
+## Accessibility
+
+### Dynamic text
+Supports dynamic text resizing, once the text size level increases to larger threshold, it drops out the image to give more space for the text
+
+### Voice Over
+Supports Voice over, standard view top title and description are concatenated to one label on the cell. Individual points cells concatenate the title and description as a single label on the cell, it does not read accessibility on the image
